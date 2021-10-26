@@ -1,0 +1,398 @@
+C:\xampp\mysql\bin>mysql.exe -u root
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 79
+Server version: 10.4.21-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+5 rows in set (0.003 sec)
+
+MariaDB [(none)]> create database ecommerce;
+Query OK, 1 row affected (0.035 sec)
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ecommerce          |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+6 rows in set (0.002 sec)
+
+MariaDB [ecommerce]> create table customer(
+    -> customer_id int(11) not null primary key,
+    -> cust_name varchar(50) default null,
+    -> city varchar(50) default null,
+    -> country varchar(50) default null,
+    -> email varchar(100) default null,
+    -> phone varchar(15) default null);
+Query OK, 0 rows affected (0.834 sec)
+
+MariaDB [ecommerce]> show tables;
++---------------------+
+| Tables_in_ecommerce |
++---------------------+
+| customer            |
++---------------------+
+1 row in set (0.001 sec)
+
+MariaDB [ecommerce]> create table item(
+    -> order_id char(10) not null primary key,
+    -> item_name varchar(50) default null,
+    -> manufacturer varchar(100) default null,
+    -> price double default null);
+Query OK, 0 rows affected (0.454 sec)
+
+MariaDB [ecommerce]> show tables;
++---------------------+
+| Tables_in_ecommerce |
++---------------------+
+| customer            |
+| item                |
++---------------------+
+2 rows in set (0.001 sec)
+
+MariaDB [ecommerce]> create table order_table(
+    -> order_id char(10) not null primary key,
+    -> customer_id int(11) not null,
+    -> delivery_address varchar(200) not null,
+    -> order_date datetime default current_timestamp,
+    -> delivery_date datetime default null,
+    -> order_total double not null default '0',
+    -> order_tax double default null,
+    -> status tinyint(1) not null,
+    -> foreign key (customer_id) references customer(customer_id));
+Query OK, 0 rows affected (0.298 sec)
+MariaDB [ecommerce]> show tables;
++---------------------+
+| Tables_in_ecommerce |
++---------------------+
+| customer            |
+| item                |
+| order_table         |
++---------------------+
+3 rows in set (0.002 sec)
+
+MariaDB [ecommerce]> source C:\Users\User\Desktop\databases\db.sql
+Query OK, 0 rows affected (0.215 sec)
+
+MariaDB [ecommerce]> desc lineitem;
++----------+----------+------+-----+---------+-------+
+| Field    | Type     | Null | Key | Default | Extra |
++----------+----------+------+-----+---------+-------+
+| order_id | char(10) | NO   | PRI | NULL    |       |
+| item_id  | char(10) | NO   | PRI | NULL    |       |
+| qty      | int(11)  | NO   |     | NULL    |       |
++----------+----------+------+-----+---------+-------+
+3 rows in set (0.016 sec)
+MariaDB [ecommerce]> desc item;
++--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| item_id      | char(10)     | NO   | PRI | NULL    |       |
+| item_name    | varchar(50)  | YES  |     | NULL    |       |
+| manufacturer | varchar(100) | YES  |     | NULL    |       |
+| price        | double       | YES  |     | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+4 rows in set (0.032 sec)
+
+MariaDB [ecommerce]> source C:\Users\User\Desktop\databases\db.sql
+Query OK, 0 rows affected (0.215 sec)
+
+MariaDB [ecommerce]> desc lineitem;
++----------+----------+------+-----+---------+-------+
+| Field    | Type     | Null | Key | Default | Extra |
++----------+----------+------+-----+---------+-------+
+| order_id | char(10) | NO   | PRI | NULL    |       |
+| item_id  | char(10) | NO   | PRI | NULL    |       |
+| qty      | int(11)  | NO   |     | NULL    |       |
++----------+----------+------+-----+---------+-------+
+3 rows in set (0.016 sec)
+
+MariaDB [ecommerce]> desc customer;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| customer_id | int(11)      | NO   | PRI | NULL    |       |
+| cust_name   | varchar(50)  | YES  |     | NULL    |       |
+| city        | varchar(50)  | YES  |     | NULL    |       |
+| country     | varchar(50)  | YES  |     | NULL    |       |
+| email       | varchar(100) | YES  |     | NULL    |       |
+| phone       | varchar(15)  | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+6 rows in set (0.056 sec)
+
+
+
+
+
+
+
+MariaDB [ecommerce]> select *from lineitem;
++----------+---------+-----+-------+
+| order_id | item_id | qty | price |
++----------+---------+-----+-------+
+| O001     | I001    |   1 | 35000 |
+| O001     | I006    |   1 | 20000 |
+| O002     | I003    |   1 | 15000 |
+| O002     | I005    |   1 | 25000 |
+| O002     | I006    |   1 | 20000 |
+| O003     | I004    |   1 | 55000 |
+| O004     | I002    |   1 | 45000 |
+| O004     | I003    |   2 | 15000 |
+| O005     | I003    |   3 | 15000 |
+| O005     | I005    |   2 | 25000 |
+| O006     | I001    |   1 | 35000 |
+| O006     | I004    |   1 | 55000 |
++----------+---------+-----+-------+
+12 rows in set (0.002 sec)
+
+MariaDB [ecommerce]> select *from customer;
++-------------+-----------+---------------+-----------+---------------------+--------------+------+
+| customer_id | cust_name | city          | country   | email               | phone        | gst  |
++-------------+-----------+---------------+-----------+---------------------+--------------+------+
+|           1 | Roy       | Delhi         | India     | roya@test.com       | 3636363636   | NULL |
+|           2 | Ronit     | Delhi         | India     | ronit@techgatha.com | 1212121212   | NULL |
+|           3 | Sujoy     | Pune          | India     | sujoy@test.com      | 8787878787   | NULL |
+|           4 | Sam       | Chicago       | USA       | sam@tehcl.com       | 776765646465 | NULL |
+|           5 | Jack Ma   | Singapore     | Singapore | jack@test.com       | 9898989898   | NULL |
+|           6 | Neil      | San Francisco | USA       | neil@techgatha.com  | 9292929292   | NULL |
+|           7 | Prakash   | London        | UK        | prakash@test.com    | 9273645352   | NULL |
+|           8 | Ray       | Mumbai        | India     | ray@gmail.com       | 8585858585   | NULL |
+|           9 | Alexa     | Mumbai        | India     | alexa@gmail.com     | 9292929292   | NULL |
+|          10 | Chinki    | Mumbai        | China     | chinki@gmail.com    | 5454545454   | NULL |
++-------------+-----------+---------------+-----------+---------------------+--------------+------+
+10 rows in set (0.001 sec)
+
+MariaDB [ecommerce]> select *from order_table;
++----------+-------------+-------------------------------------------------+---------------------+---------------------+-------------+-----------+--------+
+| order_id | customer_id | delivery_address                                | order_date          | delivery_date       | order_total | order_tax | status |
++----------+-------------+-------------------------------------------------+---------------------+---------------------+-------------+-----------+--------+
+| O001     |           1 | street name charcoal, plot no 60, Nagpur-898989 | 2021-03-07 21:42:38 | 2021-03-09 00:00:00 |           0 |      NULL |      0 |
+| O002     |           1 | street no 1234, Saunflower APts, Delhi          | 2021-03-07 21:53:50 | 2021-03-14 19:30:00 |           0 |      NULL |      0 |
+| O003     |           4 | Islander Apartments, Chicago-898989             | 2021-03-09 01:42:38 | 2021-03-10 12:45:00 |           0 |      NULL |      0 |
+| O004     |           4 | Tousdale apts, NewYork, USA                     | 2021-04-09 21:42:38 | 2021-05-10 09:00:00 |           0 |      NULL |      0 |
+| O005     |           5 | Indian Street, Singapore                        | 2021-03-12 05:10:10 | 2021-03-15 05:00:00 |           0 |      NULL |      0 |
+| O006     |           2 | 93 neelkamal apartments, Mumbai-34333           | 2021-03-08 12:12:38 | 2021-03-10 09:00:00 |           0 |      NULL |      0 |
++----------+-------------+-------------------------------------------------+---------------------+---------------------+-------------+-----------+--------+
+6 rows in set (0.007 sec)
+
+MariaDB [ecommerce]> select *from item;
++---------+-------------------+--------------+-------+
+| item_id | item_name         | manufacturer | price |
++---------+-------------------+--------------+-------+
+| I001    | Personal Computer | Apple        | 35000 |
+| I002    | Personal Computer | Windows      | 45000 |
+| I003    | Bluetooth         | Bose         | 15000 |
+| I004    | laptop            | Apple        | 55000 |
+| I005    | laptop            | HP           | 25000 |
+| I006    | Headphone         | Sony         | 20000 |
+| I007    | Wireless Mouse    | Sony         |     0 |
++---------+-------------------+--------------+-------+
+7 rows in set (0.005 sec)
+
+MariaDB [ecommerce]> select item_name, price from item where manufacturer='apple';
++-------------------+-------+
+| item_name         | price |
++-------------------+-------+
+| Personal Computer | 35000 |
+| laptop            | 55000 |
++-------------------+-------+
+2 rows in set (0.001 sec)
+
+MariaDB [ecommerce]> select item_name, price from item where manufacturer='apple' and price>50000;
++-----------+-------+
+| item_name | price |
++-----------+-------+
+| laptop    | 55000 |
++-----------+-------+
+1 row in set (0.063 sec)
+
+MariaDB [ecommerce]> select item_name, price from item where manufacturer='apple' or manufacturer ='sony' and price>50000;
++-------------------+-------+
+| item_name         | price |
++-------------------+-------+
+| Personal Computer | 35000 |
+| laptop            | 55000 |
++-------------------+-------+
+2 rows in set (0.001 sec)
+
+MariaDB [ecommerce]> select item_name, price,manufacturer from item where manufacturer='apple' or manufacturer ='sony' and price>50000;
++-------------------+-------+--------------+
+| item_name         | price | manufacturer |
++-------------------+-------+--------------+
+| Personal Computer | 35000 | Apple        |
+| laptop            | 55000 | Apple        |
++-------------------+-------+--------------+
+2 rows in set (0.001 sec)
+
+MariaDB [ecommerce]> select item_name, price,manufacturer from item where (manufacturer='apple' or manufacturer ='sony') and price>50000;
++-----------+-------+--------------+
+| item_name | price | manufacturer |
++-----------+-------+--------------+
+| laptop    | 55000 | Apple        |
++-----------+-------+--------------+
+1 row in set (0.002 sec)
+
+MariaDB [ecommerce]> select item_name, price,manufacturer from item where manufacturer in ('apple','sony');
++-------------------+-------+--------------+
+| item_name         | price | manufacturer |
++-------------------+-------+--------------+
+| Personal Computer | 35000 | Apple        |
+| laptop            | 55000 | Apple        |
+| Headphone         | 20000 | Sony         |
+| Wireless Mouse    |     0 | Sony         |
++-------------------+-------+--------------+
+4 rows in set (0.001 sec)
+
+MariaDB [ecommerce]> select item_name, price,manufacturer from item where manufacturer in ('apple','sony') and price>50000;
++-----------+-------+--------------+
+| item_name | price | manufacturer |
++-----------+-------+--------------+
+| laptop    | 55000 | Apple        |
++-----------+-------+--------------+
+1 row in set (0.002 sec)
+
+MariaDB [ecommerce]> select *from customer;
++-------------+-----------+---------------+-----------+---------------------+--------------+------+
+| customer_id | cust_name | city          | country   | email               | phone        | gst  |
++-------------+-----------+---------------+-----------+---------------------+--------------+------+
+|           1 | Roy       | Delhi         | India     | roya@test.com       | 3636363636   | NULL |
+|           2 | Ronit     | Delhi         | India     | ronit@techgatha.com | 1212121212   | NULL |
+|           3 | Sujoy     | Pune          | India     | sujoy@test.com      | 8787878787   | NULL |
+|           4 | Sam       | Chicago       | USA       | sam@tehcl.com       | 776765646465 | NULL |
+|           5 | Jack Ma   | Singapore     | Singapore | jack@test.com       | 9898989898   | NULL |
+|           6 | Neil      | San Francisco | USA       | neil@techgatha.com  | 9292929292   | NULL |
+|           7 | Prakash   | London        | UK        | prakash@test.com    | 9273645352   | NULL |
+|           8 | Ray       | Mumbai        | India     | ray@gmail.com       | 8585858585   | NULL |
+|           9 | Alexa     | Mumbai        | India     | alexa@gmail.com     | 9292929292   | NULL |
+|          10 | Chinki    | Mumbai        | China     | chinki@gmail.com    | 5454545454   | NULL |
++-------------+-----------+---------------+-----------+---------------------+--------------+------+
+10 rows in set (0.001 sec)
+
+MariaDB [ecommerce]> select *from customer where email like '%@test.com';
++-------------+-----------+-----------+-----------+------------------+------------+------+
+| customer_id | cust_name | city      | country   | email            | phone      | gst  |
++-------------+-----------+-----------+-----------+------------------+------------+------+
+|           1 | Roy       | Delhi     | India     | roya@test.com    | 3636363636 | NULL |
+|           3 | Sujoy     | Pune      | India     | sujoy@test.com   | 8787878787 | NULL |
+|           5 | Jack Ma   | Singapore | Singapore | jack@test.com    | 9898989898 | NULL |
+|           7 | Prakash   | London    | UK        | prakash@test.com | 9273645352 | NULL |
++-------------+-----------+-----------+-----------+------------------+------------+------+
+4 rows in set (0.001 sec)
+
+MariaDB [ecommerce]> select *from customer where email like 'r%@test.com';
++-------------+-----------+-------+---------+---------------+------------+------+
+| customer_id | cust_name | city  | country | email         | phone      | gst  |
++-------------+-----------+-------+---------+---------------+------------+------+
+|           1 | Roy       | Delhi | India   | roya@test.com | 3636363636 | NULL |
++-------------+-----------+-------+---------+---------------+------------+------+
+1 row in set (0.001 sec)
+
+MariaDB [ecommerce]> select *from customer where email like 'r%.com'
+    -> ;
++-------------+-----------+--------+---------+---------------------+------------+------+
+| customer_id | cust_name | city   | country | email               | phone      | gst  |
++-------------+-----------+--------+---------+---------------------+------------+------+
+|           1 | Roy       | Delhi  | India   | roya@test.com       | 3636363636 | NULL |
+|           2 | Ronit     | Delhi  | India   | ronit@techgatha.com | 1212121212 | NULL |
+|           8 | Ray       | Mumbai | India   | ray@gmail.com       | 8585858585 | NULL |
++-------------+-----------+--------+---------+---------------------+------------+------+
+3 rows in set (0.001 sec)
+
+MariaDB [ecommerce]>
+
+
+MariaDB [ecommerce]> select *from lineitem;
++----------+---------+-----+-------+
+| order_id | item_id | qty | price |
++----------+---------+-----+-------+
+| O001     | I001    |   1 | 35000 |
+| O001     | I006    |   1 | 20000 |
+| O002     | I003    |   1 | 15000 |
+| O002     | I005    |   1 | 25000 |
+| O002     | I006    |   1 | 20000 |
+| O003     | I004    |   1 | 55000 |
+| O004     | I002    |   1 | 45000 |
+| O004     | I003    |   2 | 15000 |
+| O005     | I003    |   3 | 15000 |
+| O005     | I005    |   2 | 25000 |
+| O006     | I001    |   1 | 35000 |
+| O006     | I004    |   1 | 55000 |
++----------+---------+-----+-------+
+12 rows in set (0.001 sec)
+
+MariaDB [ecommerce]> select sum(price) from lineitem where order_id='o001';
++------------+
+| sum(price) |
++------------+
+|      55000 |
++------------+
+1 row in set (0.068 sec)
+
+MariaDB [ecommerce]> select sum(price) as 'total' from lineitem where order_id='o001';
++-------+
+| total |
++-------+
+| 55000 |
++-------+
+1 row in set (0.001 sec)
+
+MariaDB [ecommerce]> select sum(price) as 'total',order_id from lineitem group by order_id;
++-------+----------+
+| total | order_id |
++-------+----------+
+| 55000 | O001     |
+| 60000 | O002     |
+| 55000 | O003     |
+| 60000 | O004     |
+| 40000 | O005     |
+| 90000 | O006     |
++-------+----------+
+6 rows in set (0.019 sec)
+
+MariaDB [ecommerce]> select sum(price) as 'total',order_id from lineitem group by order_id having total>=60000;
++-------+----------+
+| total | order_id |
++-------+----------+
+| 60000 | O002     |
+| 60000 | O004     |
+| 90000 | O006     |
++-------+----------+
+3 rows in set (0.051 sec)
+
+MariaDB [ecommerce]> select sum(price) as 'total',order_id from lineitem group by order_id having total>=60000 order by order_id desc;
++-------+----------+
+| total | order_id |
++-------+----------+
+| 90000 | O006     |
+| 60000 | O004     |
+| 60000 | O002     |
++-------+----------+
+3 rows in set (0.009 sec)
+
+MariaDB [ecommerce]> select count(*) from customer;
++----------+
+| count(*) |
++----------+
+|       10 |
++----------+
+1 row in set (0.002 sec)
+
+MariaDB [ecommerce]>
