@@ -1,0 +1,103 @@
+Question  →  
+
+ 
+
+Consider the schema for MovieDatabase: 
+
+ 
+
+ACTOR (Act_id, Act_Name, Act_Gender) 
+
+DIRECTOR (Dir_id, Dir_Name, Dir_Phone) 
+
+MOVIES (Mov_id, Mov_Title, Mov_Year, Mov_Lang, Dir_id) 
+
+MOVIE_CAST (Act_id, Mov_id, Role) 
+
+RATING (Mov_id, Review_Stars) 
+
+ 
+
+Write SQL queries to 
+
+ 
+
+List the titles of all movies directed by ‘akash’.
+List all actors who acted in a movie before 2021 and also in a movie after 2018 (use JOIN operation).
+Find the title of movies and number of stars for each movie that has at least one rating and find the highest number of stars that movie received. Sort the result by movie title.
+Update rating of all movies directed by ‘Pamela’’ to5
+ 
+
+   Insert the following data
+
+ 
+
+INSERT INTO ACTOR VALUES (1,'Anisha','f');
+
+INSERT INTO ACTOR VALUES (2,'Pavan','m');
+
+INSERT INTO ACTOR VALUES (3,'Pradeep','m');
+
+INSERT INTO ACTOR VALUES (4,'George','m');
+
+INSERT INTO DIRECTOR VALUES (1,'Rohit', 1234567890);
+
+INSERT INTO DIRECTOR VALUES (2,'Akash', 1345678901);
+
+INSERT INTO DIRECTOR VALUES (3,'Christopher', 1456789012);
+
+INSERT INTO DIRECTOR VALUES (4,'Pamela', 1567890123);
+
+INSERT INTO MOVIES VALUES (1,'ABCD', 2020, 'Hindi', 1);
+
+INSERT INTO MOVIES VALUES (2,'BCDA', 2019, 'Telugu', 1);
+
+INSERT INTO MOVIES VALUES (3,'CDAB', 2021, 'English', 2); 
+
+INSERT INTO MOVIES VALUES (4,'DABC', 2018, 'Kannada', 3);
+
+INSERT INTO MOVIE_CAST VALUES (1, 2, 'Actress'); 
+
+INSERT INTO MOVIE_CAST VALUES (1, 1, 'Actress'); 
+
+INSERT INTO MOVIE_CAST VALUES (3, 3, 'Actor'); 
+
+INSERT INTO MOVIE_CAST VALUES (3, 2, 'Villain'); 
+
+INSERT INTO MOVIE_CAST VALUES (4, 4, 'actor');
+
+INSERT INTO RATING VALUES (1,4);
+
+INSERT INTO RATING VALUES (2,2);
+
+INSERT INTO RATING VALUES (3, 5);
+
+INSERT INTO RATING VALUES (4, 4);
+
+
+
+
+SELECT * FROM ACTOR;
+
+SELECT * FROM DIRECTOR;
+
+SELECT * FROM MOVIES;
+
+SELECT * FROM MOVIE_CASTE;
+
+SELECT  *  FROM RATING;
+
+SELECT M.MOV_TITLE FROM MOVIES M,DIRECTOR D WHERE 
+D.DIR_NAME='AKASH' AND D.DIR_ID=M.DIR_ID;
+
+SELECT ACT_NAME FROM ACTOR A, MOVIE_CASTE MC WHERE 
+A.ACT_ID=MC.ACT_ID AND MC.MOV_ID IN (SELECT MOV_ID FROM MOVIES 
+WHERE MOV_YEAR NOT BETWEEN 2021 AND 2018) GROUP BY ACT_NAME 
+HAVING COUNT(*)>1;
+
+SELECT MOV_TITLE,MAX(REV_STARS) FROM MOVIES M INNER  JOIN  RATING 
+R ON M.MOV_ID=R.MOV_ID GROUP BY MOV_TITLE ORDER BY MOV_TITLE;
+
+UPDATE RATING SET REV_STARS=5 WHERE MOV_ID IN (SELECT MOV_ID 
+FROM MOVIES M,DIRECTOR D WHERE D.DIR_ID=M.DIR_ID AND 
+DIR_NAME='PAMELA');
